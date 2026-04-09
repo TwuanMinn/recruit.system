@@ -86,8 +86,8 @@ const CandidateDetail: React.FC<Props> = ({ candidate, dispatch, state }) => {
 
         {/* Right Column: Assessment */}
         <div className="lg:col-span-2">
-          {iv ? (
-            <div className="bg-surface-container-lowest p-8 rounded-xl card-shadow border border-outline-variant/10">
+          {iv && (
+            <div className="bg-surface-container-lowest p-8 rounded-xl card-shadow border border-outline-variant/10 animate-fade-in">
               <div className="flex justify-between items-start mb-8">
                 <div>
                   <h3 className="text-lg font-bold text-on-surface mb-1">Interview Assessment</h3>
@@ -149,19 +149,6 @@ const CandidateDetail: React.FC<Props> = ({ candidate, dispatch, state }) => {
                   )}
                 </div>
               )}
-            </div>
-          ) : (
-            <div className="bg-surface-container-lowest p-16 rounded-xl card-shadow border border-outline-variant/10 text-center">
-              <div className="w-20 h-20 bg-surface-container-low text-on-surface/30 mx-auto rounded-full flex items-center justify-center mb-6">
-                <Icon name="assignment" className="text-4xl" />
-              </div>
-              <h3 className="text-xl font-bold text-on-surface mb-2">No Assessment Available</h3>
-              <p className="text-sm text-on-surface/50 mb-8 max-w-md mx-auto">
-                This candidate hasn't been interviewed or assessed yet. Create the assessment record to document their performance.
-              </p>
-              <Btn icon="add_notes" onClick={() => dispatch({ type: 'TOGGLE_INTERVIEW' })}>
-                Create Assessment
-              </Btn>
             </div>
           )}
         </div>
