@@ -64,6 +64,7 @@ export default function App() {
                 onChange={(e) => dispatch({ type: 'SET_SEARCH', payload: e.target.value })}
               />
             </div>
+          </div>
         </header>
 
         <div className="px-8 pb-12">
