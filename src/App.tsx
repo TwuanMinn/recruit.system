@@ -202,7 +202,7 @@ export default function App() {
                                   </td>
                                     <td className="px-8 py-5">
                                       <StatusDot
-                                        label={c.interviewStatus || 'No Response'}
+                                        label={c.interviewStatus === 'Rejected' ? 'Denied' : (c.interviewStatus || 'No Response')}
                                         color={isConfirmed ? '#006d4a' : c.interviewStatus === 'Rejected' ? '#ac3149' : '#416188'}
                                       />
                                     </td>
