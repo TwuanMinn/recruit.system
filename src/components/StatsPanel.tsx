@@ -15,9 +15,9 @@ const levelBarColors: Record<Level, string> = {
   Newbie: 'bg-tertiary',
 };
 const levelTextColors: Record<Level, string> = {
-  Senior: 'text-primary',
-  Beginner: 'text-on-surface-variant',
-  Newbie: 'text-tertiary',
+  Senior: 'text-gray-900',
+  Beginner: 'text-gray-900',
+  Newbie: 'text-gray-900',
 };
 
 const resultConfig: Record<string, { color: string }> = {
