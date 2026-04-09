@@ -48,46 +48,10 @@ export default function App() {
 
   return (
     <div className="flex bg-surface font-body text-on-surface selection:bg-primary-container selection:text-on-primary-container">
-      {/* ===== SideNavBar ===== */}
-      <aside className="h-screen w-64 fixed left-0 top-0 bg-surface-container-lowest shadow-[0px_10px_30px_-5px_rgba(13,52,89,0.06)] z-50 flex flex-col p-6 gap-2 border-r border-outline-variant/10">
-        <div className="mb-6">
-          <h2 className="text-lg font-black text-on-surface leading-tight">Recruitment</h2>
-          <p className="text-xs font-medium text-on-surface/50 tracking-widest uppercase mt-1">Editorial Precision</p>
-        </div>
-        <nav className="flex-1 space-y-1">
-          <div className="flex items-center gap-3 px-4 py-3 rounded-xl cursor-pointer transition-all duration-300 text-primary font-bold border-r-4 border-primary bg-surface-container-low">
-            <Icon name="dashboard" />
-            <span className="text-sm tracking-tight">Dashboard</span>
-          </div>
-          <div
-            className="flex items-center gap-3 px-4 py-3 rounded-xl cursor-pointer transition-all duration-300 text-on-surface/70 hover:text-primary hover:bg-surface-container-low"
-            onClick={() => dispatch({ type: 'SET_VIEW', payload: 'list' })}
-          >
-            <Icon name="group" />
-            <span className="text-sm tracking-tight">Candidates</span>
-          </div>
-          <div className="flex items-center gap-3 px-4 py-3 rounded-xl cursor-pointer transition-all duration-300 text-on-surface/70 hover:text-primary hover:bg-surface-container-low">
-            <Icon name="event_note" />
-            <span className="text-sm tracking-tight">Interviews</span>
-          </div>
-          <div className="flex items-center gap-3 px-4 py-3 rounded-xl cursor-pointer transition-all duration-300 text-on-surface/70 hover:text-primary hover:bg-surface-container-low">
-            <Icon name="settings" />
-            <span className="text-sm tracking-tight">Settings</span>
-          </div>
-        </nav>
-        <div className="mt-auto space-y-4">
-          <button className="w-full py-4 bg-primary text-on-primary rounded-xl font-bold text-sm shadow-lg shadow-primary/20 active:scale-95 transition-transform" onClick={() => dispatch({ type: 'TOGGLE_FORM' })}>
-            Post New Job
-          </button>
-          <div className="flex items-center gap-3 px-4 py-3 rounded-xl cursor-pointer text-on-surface/70 hover:text-primary">
-            <Icon name="help_outline" />
-            <span className="text-sm font-['Inter']">Help Center</span>
-          </div>
-        </div>
-      </aside>
+{/* ===== SideNavBar Removed ===== */}
 
       {/* ===== Main Content ===== */}
-      <main className="ml-64 min-h-screen w-full">
+      <main className="min-h-screen w-full max-w-7xl mx-auto">
         {/* TopAppBar */}
         <header className="w-full sticky top-0 z-40 bg-surface/90 backdrop-blur-md flex justify-between items-center px-8 py-4 border-b border-outline-variant/5">
           <div className="flex items-center gap-4 flex-1">
@@ -228,22 +192,7 @@ export default function App() {
                   <TalentDistribution candidates={candidates} />
                   <ApplicationHealth candidates={candidates} />
 
-                  {/* Activity Float Component */}
-                  <div className="relative overflow-hidden p-6 bg-primary rounded-xl text-on-primary shadow-lg shadow-primary/20">
-                    <div className="relative z-10">
-                      <h4 className="text-[0.6875rem] font-bold uppercase tracking-[0.1em] opacity-80 mb-4 text-primary-container">Next Interview</h4>
-                      <div className="flex items-center gap-3 bg-white/10 backdrop-blur-md p-3 rounded-xl border border-white/10 hover:bg-white/15 transition-colors cursor-pointer">
-                        <img className="w-8 h-8 rounded-full border border-white/20" src={avatars[2]} alt="User" />
-                        <div className="flex-1 min-w-0">
-                          <p className="text-xs font-bold truncate">New Applicant</p>
-                          <p className="text-[0.65rem] opacity-70">Frontend Developer</p>
-                        </div>
-                        <Icon name="schedule" className="text-sm opacity-80" />
-                      </div>
-                    </div>
-                    {/* Abstract Texture */}
-                    <div className="absolute top-0 right-0 w-32 h-32 bg-white/10 rounded-full -translate-y-1/2 translate-x-1/2 blur-3xl"></div>
-                  </div>
+                  {/* Removed Activity Float Component */}
                 </div>
               </div>
             </>
