@@ -49,7 +49,7 @@ const InterviewForm: React.FC<Props> = ({ candidate, dispatch }) => {
           <Icon name="monetization_on" size="text-sm" /> Compensation
         </h4>
         <div className="grid grid-cols-1 md:grid-cols-2 gap-4">
-          <Input label="Expectation Amount" type="number" placeholder="Eg: 5000" value={f.salaryExpectation} onChange={set('salaryExpectation')} />
+          <Input label="Expectation Amount" type="text" placeholder="Eg: 5000 or Negotiable" value={f.salaryExpectation} onChange={set('salaryExpectation')} />
           <Sel label="Frequency" value={f.salaryType} onChange={set('salaryType')} options={[{ value: 'monthly', label: 'Monthly' }, { value: 'yearly', label: 'Yearly' }]} />
         </div>
       </div>

@@ -106,7 +106,10 @@ const CandidateDetail: React.FC<Props> = ({ candidate, dispatch, state }) => {
                   <div>
                     <div className="text-[0.625rem] font-bold text-on-surface/40 uppercase tracking-widest">Expected Salary</div>
                     <div className="text-2xl font-black text-secondary mt-0.5">
-                      ${Number(iv.salaryExpectation).toLocaleString('en-US')}
+                      {isNaN(Number(iv.salaryExpectation)) 
+                        ? iv.salaryExpectation 
+                        : `$${Number(iv.salaryExpectation).toLocaleString('en-US')}`
+                      }
                       <span className="text-sm font-bold opacity-60">
                         {iv.salaryType === 'monthly' ? ' / mo' : ' / yr'}
                       </span>
