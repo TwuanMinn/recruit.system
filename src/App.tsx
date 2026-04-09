@@ -1,4 +1,4 @@
-import { useReducer, useEffect } from 'react';
+import { useReducer, useEffect, useState } from 'react';
 import { reducer, initialState } from './reducer';
 import { STORAGE_KEY, resultOptions } from './constants';
 import { Badge, StatusDot, Icon } from './components/ui';
@@ -24,7 +24,8 @@ const levelBadgeConfig: Record<Level, { color: string; border: string }> = {
 
 export default function App() {
   const [state, dispatch] = useReducer(reducer, initialState);
-  const { candidates, view, selectedCandidate, showForm, searchTerm } = state;
+  const { candidates, view, selectedCandidate, showForm, searchTerm, filterLevel, filterResult } = state;
+  const [filterOpen, setFilterOpen] = useState(false);
 
   // Load from localStorage on mount
   useEffect(() => {
@@ -41,10 +42,15 @@ export default function App() {
     }
   }, []);
 
-  const filtered = candidates.filter((c) =>
-    c.name.toLowerCase().includes(searchTerm.toLowerCase()) ||
-    c.gmail.toLowerCase().includes(searchTerm.toLowerCase())
-  );
+  const filtered = candidates.filter((c) => {
+    const matchSearch = c.name.toLowerCase().includes(searchTerm.toLowerCase()) || c.gmail.toLowerCase().includes(searchTerm.toLowerCase());
+    const matchLevel = filterLevel === 'all' || c.level === filterLevel;
+    const matchResult = filterResult === 'all' || 
+      (filterResult === 'Confirmed' ? c.interviewStatus === 'Confirmed' : 
+       filterResult === 'No Response' ? c.interviewStatus === 'No Response' :
+       c.interview?.result === filterResult);
+    return matchSearch && matchLevel && matchResult;
+  });
 
   return (
     <div className="flex bg-surface font-body text-on-surface selection:bg-primary-container selection:text-on-primary-container">
@@ -64,9 +70,49 @@ export default function App() {
                   <p className="text-on-surface/60 mt-1">Reviewing the latest talent acquisition metrics and profiles.</p>
                 </div>
                 <div className="flex gap-3">
-                  <button className="px-5 py-2.5 bg-surface-container-highest text-on-surface font-bold text-sm rounded-xl active:scale-95 transition-transform flex items-center gap-2 hover:bg-surface-container-highest/80">
-                    <Icon name="filter_list" size="text-lg" /> Filter
-                  </button>
+                  <div className="relative">
+                    <button 
+                      className={`px-5 py-2.5 font-bold text-sm rounded-xl active:scale-95 transition-all flex items-center gap-2 ${filterOpen || filterLevel !== 'all' || filterResult !== 'all' ? 'bg-primary text-on-primary shadow-lg shadow-primary/20' : 'bg-surface-container-highest text-on-surface hover:bg-surface-container-highest/80'}`}
+                      onClick={() => setFilterOpen(!filterOpen)}
+                    >
+                      <Icon name="filter_list" size="text-lg" /> Filter
+                      {(filterLevel !== 'all' || filterResult !== 'all') && <span className="bg-white text-primary text-[0.625rem] w-4 h-4 flex items-center justify-center rounded-full ml-1">!</span>}
+                    </button>
+
+                    {filterOpen && (
+                      <div className="absolute right-0 mt-2 w-56 bg-surface-container-lowest border border-outline-variant/10 shadow-xl rounded-2xl p-5 z-50 animate-fade-in card-shadow text-left">
+                        <div className="mb-4">
+                          <label className="block text-[0.625rem] font-bold tracking-[0.05em] text-on-surface/50 uppercase mb-2">Seniority Level</label>
+                          <select 
+                            className="w-full px-3 py-2 bg-surface text-sm font-bold text-on-surface rounded-xl border border-outline-variant/20 outline-none cursor-pointer focus:ring-2 focus:border-primary/50 focus:ring-primary/20"
+                            value={filterLevel}
+                            onChange={(e) => dispatch({ type: 'SET_FILTER_LEVEL', payload: e.target.value })}
+                          >
+                            <option value="all">All Levels</option>
+                            <option value="Senior">Senior</option>
+                            <option value="Beginner">Beginner</option>
+                            <option value="Newbie">Newbie</option>
+                          </select>
+                        </div>
+                        <div className="mb-2">
+                          <label className="block text-[0.625rem] font-bold tracking-[0.05em] text-on-surface/50 uppercase mb-2">Application Status</label>
+                          <select 
+                            className="w-full px-3 py-2 bg-surface text-sm font-bold text-on-surface rounded-xl border border-outline-variant/20 outline-none cursor-pointer focus:ring-2 focus:border-primary/50 focus:ring-primary/20"
+                            value={filterResult}
+                            onChange={(e) => dispatch({ type: 'SET_FILTER_RESULT', payload: e.target.value })}
+                          >
+                            <option value="all">All Statuses</option>
+                            <option value="Confirmed">Confirmed</option>
+                            <option value="No Response">No Response</option>
+                            <option value="Hired">Hired (Assessed)</option>
+                            <option value="Rejected">Rejected</option>
+                            <option value="Potential Talented">Potential</option>
+                            <option value="Future Consideration">Future Consideration</option>
+                          </select>
+                        </div>
+                      </div>
+                    )}
+                  </div>
                   <button
                     className="px-5 py-2.5 bg-primary text-on-primary font-bold text-sm rounded-xl active:scale-95 transition-transform flex items-center gap-2 shadow-lg shadow-primary/20 hover:bg-primary-dim"
                     onClick={() => dispatch({ type: 'TOGGLE_FORM' })}
