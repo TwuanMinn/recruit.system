@@ -28,7 +28,7 @@ const InterviewForm: React.FC<Props> = ({ candidate, dispatch }) => {
   const submit = () => dispatch({ type: 'UPDATE_CANDIDATE', payload: { ...candidate, interview: f as any } });
 
   return (
-    <div className="bg-surface-container-lowest p-8 rounded-xl card-shadow border border-outline-variant/10 mt-8 relative z-50 shadow-[0_20px_50px_-12px_rgba(13,52,89,0.15)]">
+    <div className="bg-surface-container-lowest p-8 rounded-xl card-shadow border border-outline-variant/10 mt-8 relative z-50 shadow-[0_20px_50px_-12px_rgba(13,52,89,0.15)] animate-fade-in">
       <div className="flex justify-between items-center mb-8 pb-6 border-b border-outline-variant/5">
         <div>
           <h2 className="text-2xl font-black text-on-surface">Record Assessment</h2>
