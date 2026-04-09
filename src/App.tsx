@@ -64,21 +64,6 @@ export default function App() {
                 onChange={(e) => dispatch({ type: 'SET_SEARCH', payload: e.target.value })}
               />
             </div>
-          </div>
-          <div className="flex items-center gap-6">
-            <div className="flex items-center gap-2">
-              <button className="p-2 text-on-surface-variant hover:bg-surface-container-low rounded-full transition-colors relative">
-                <Icon name="notifications" />
-                <span className="absolute top-2 right-2 w-2 h-2 bg-error rounded-full"></span>
-              </button>
-              <button className="p-2 text-on-surface-variant hover:bg-surface-container-low rounded-full transition-colors">
-                <Icon name="mail" />
-              </button>
-            </div>
-            <div className="h-10 w-10 rounded-full overflow-hidden border-2 border-surface-container-highest cursor-pointer hover:border-primary transition-colors">
-              <img alt="User profile" className="w-full h-full object-cover" src={avatars[0]} />
-            </div>
-          </div>
         </header>
 
         <div className="px-8 pb-12">
