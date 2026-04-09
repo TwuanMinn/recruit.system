@@ -57,12 +57,12 @@ export default function App() {
 
   const exportToPDF = () => {
     const doc = new jsPDF();
-    doc.text('Recent Candidates', 14, 15);
+    doc.text('All Candidates', 14, 15);
     
     const tableColumn = ["Name", "Email", "Phone", "Level", "Status", "Final Result"];
     const tableRows: any[] = [];
 
-    filtered.forEach(cand => {
+    candidates.forEach(cand => {
       const candData = [
         cand.name,
         cand.gmail,
