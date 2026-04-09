@@ -168,7 +168,7 @@ export const ConfirmPicker: React.FC<ConfirmPickerProps> = ({ value, onChange })
             style={selected ? { color: cfg.color, borderColor: cfg.color } : undefined}
           >
             <Icon name={cfg.icon} className="text-lg" />
-            {opt === 'Confirmed' ? 'Interview' : opt}
+            {opt}
           </button>
         );
       })}

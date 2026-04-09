@@ -205,7 +205,7 @@ export default function App() {
                                       <StatusDot label={c.interview.result} color={c.interview.result === 'Hired' ? '#006d4a' : '#ac3149'} />
                                     ) : (
                                       <StatusDot
-                                        label={c.interviewStatus === 'Confirmed' ? 'Interview' : (c.interviewStatus || 'No Response')}
+                                        label={c.interviewStatus || 'No Response'}
                                         color={isConfirmed ? '#006d4a' : '#ac3149'}
                                       />
                                     )}

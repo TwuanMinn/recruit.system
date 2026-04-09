@@ -57,7 +57,7 @@ const CandidateDetail: React.FC<Props> = ({ candidate, dispatch, state }) => {
                 {iv?.result ? (
                   <Badge label={`Result: ${iv.result}`} colors={{ text: '#006d4a', border: '#006d4a', bg: 'transparent' }} />
                 ) : (
-                  <StatusDot label={candidate.interviewStatus === 'Confirmed' ? 'Interview' : (candidate.interviewStatus || 'No Response')} color={isConfirmed ? '#006d4a' : '#ac3149'} />
+                  <StatusDot label={candidate.interviewStatus || 'No Response'} color={isConfirmed ? '#006d4a' : '#ac3149'} />
                 )}
               </div>
               
