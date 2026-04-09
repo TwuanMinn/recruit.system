@@ -1,7 +1,6 @@
 import React from 'react';
 import type { AppAction, AppState, Candidate } from '../types';
-import { genderIcons, confirmColors, resultColors } from '../constants';
-import { Badge, Btn, formatSalary } from './ui';
+import { Badge, StatusDot, Icon, Btn } from './ui';
 import { exportCandidatePDF } from '../pdf';
 import EditCandidateForm from './EditCandidateForm';
 import InterviewForm from './InterviewForm';
@@ -14,200 +13,162 @@ interface Props {
 
 const CandidateDetail: React.FC<Props> = ({ candidate, dispatch, state }) => {
   const iv = candidate.interview;
-  const sal = iv?.salaryExpectation
-    ? `$${formatSalary(iv.salaryExpectation)}${iv.salaryType === 'monthly' ? ' /month' : ' /year'}`
-    : null;
-  const cs = confirmColors[candidate.interviewStatus] || confirmColors['No Response'];
+  const isConfirmed = candidate.interviewStatus === 'Confirmed';
 
   return (
-    <div className="animate-fade-up">
-      {/* Back button */}
-      <button
-        onClick={() => dispatch({ type: 'SET_VIEW', payload: 'list' })}
-        className="mb-4 inline-flex items-center gap-2 text-sm font-medium text-gray-500 hover:text-brand-600 transition-colors duration-200 group"
-      >
-        <span className="group-hover:-translate-x-1 transition-transform duration-200">←</span>
-        Back to List
-      </button>
+    <div className="space-y-6">
+      {/* Detail Header */}
+      <div className="flex items-center gap-4 mb-4">
+        <button
+          onClick={() => dispatch({ type: 'SET_VIEW', payload: 'list' })}
+          className="p-2 rounded-full hover:bg-surface-container-low text-on-surface-variant transition-colors"
+        >
+          <Icon name="arrow_back" />
+        </button>
+        <div>
+          <h2 className="text-2xl font-black text-on-surface flex items-center gap-3">
+            {candidate.name}
+            {candidate.gender === 'Male' && <Icon name="male" className="text-secondary" size="text-xl" />}
+            {candidate.gender === 'Female' && <Icon name="female" className="text-error" size="text-xl" />}
+          </h2>
+          <p className="text-on-surface/50 text-sm mt-0.5">{candidate.gmail} • {candidate.phone}</p>
+        </div>
+        <div className="ml-auto flex gap-3">
+          <Btn variant="tonal" icon="edit" onClick={() => dispatch({ type: 'TOGGLE_EDIT_CANDIDATE' })}>
+            Edit Form
+          </Btn>
+          <Btn variant="ghost" icon="picture_as_pdf" onClick={() => exportCandidatePDF(candidate)}>
+            Export PDF
+          </Btn>
+        </div>
+      </div>
 
-      <div className="bg-white rounded-2xl overflow-hidden shadow-card border border-gray-100">
-        {/* ===== Header ===== */}
-        <div className="relative bg-gradient-to-r from-brand-500 via-purple-500 to-violet-500 px-7 pt-8 pb-6 text-white overflow-hidden">
-          {/* Decorative circles */}
-          <div className="absolute -top-16 -right-16 w-64 h-64 rounded-full bg-white/5" />
-          <div className="absolute -bottom-20 -left-10 w-48 h-48 rounded-full bg-white/5" />
-          <div className="absolute top-4 right-20 w-20 h-20 rounded-full bg-white/5" />
-
-          <div className="relative z-10 flex justify-between items-start flex-wrap gap-3">
-            <div>
-              <h2 className="text-2xl font-extrabold tracking-tight flex items-center gap-2">
-                {candidate.name}
-                {candidate.gender && (
-                  <span className="text-lg opacity-70">{genderIcons[candidate.gender]}</span>
+      <div className="grid grid-cols-1 lg:grid-cols-3 gap-6">
+        {/* Left Column: Core Info */}
+        <div className="lg:col-span-1 space-y-6">
+          <div className="bg-surface-container-lowest p-6 rounded-xl card-shadow border border-outline-variant/10">
+            <h3 className="text-xs font-bold uppercase tracking-widest text-on-surface/40 mb-5">Profile Details</h3>
+            
+            <div className="space-y-4">
+              <div>
+                <div className="text-[0.625rem] font-bold text-on-surface/40 uppercase tracking-widest mb-1">Status</div>
+                {iv?.result ? (
+                  <Badge label={`Result: ${iv.result}`} colors={{ text: '#006d4a', border: '#006d4a', bg: 'transparent' }} />
+                ) : (
+                  <StatusDot label={candidate.interviewStatus || 'No Response'} color={isConfirmed ? '#006d4a' : '#416188'} />
                 )}
-              </h2>
-              <p className="text-white/70 mt-1.5 text-sm">
-                Added {candidate.createdAt}
-                {candidate.gender && ` • ${candidate.gender}`}
-              </p>
+              </div>
+              
+              <div>
+                <div className="text-[0.625rem] font-bold text-on-surface/40 uppercase tracking-widest mb-1">Level</div>
+                <div className="text-sm font-bold text-on-surface">{candidate.level}</div>
+              </div>
+
+              {candidate.linkCV && (
+                <div>
+                  <div className="text-[0.625rem] font-bold text-on-surface/40 uppercase tracking-widest mb-1">Resume / CV</div>
+                  <a href={candidate.linkCV} target="_blank" rel="noreferrer" className="text-sm font-bold text-primary flex items-center gap-1 hover:underline">
+                    View Document <Icon name="open_in_new" size="text-[14px]" />
+                  </a>
+                </div>
+              )}
             </div>
-            <div className="flex gap-2 items-center flex-wrap">
-              <Badge
-                label={candidate.level}
-                colors={{ bg: 'rgba(255,255,255,0.15)', text: '#fff', border: 'rgba(255,255,255,0.3)' }}
-              />
-              <Badge
-                label={`${cs.icon} ${candidate.interviewStatus || 'No Response'}`}
-                colors={{ bg: 'rgba(255,255,255,0.15)', text: '#fff', border: 'rgba(255,255,255,0.3)' }}
-              />
-              <button
-                onClick={() => dispatch({ type: 'TOGGLE_EDIT_CANDIDATE' })}
-                className="px-3 py-1.5 rounded-lg text-xs font-semibold bg-white/15 text-white border border-white/30 hover:bg-white/25 transition-all duration-200 backdrop-blur-sm"
-              >
-                ✏️ Edit
-              </button>
-              <button
-                onClick={() => exportCandidatePDF(candidate)}
-                className="px-3 py-1.5 rounded-lg text-xs font-semibold bg-white/15 text-white border border-white/30 hover:bg-white/25 transition-all duration-200 backdrop-blur-sm"
-              >
-                📄 PDF
-              </button>
+            
+            <div className="mt-8 pt-6 border-t border-outline-variant/10 text-center">
+              <Btn variant="danger" className="w-full justify-center" onClick={() => {
+                if (confirm('Delete this candidate forever?')) dispatch({ type: 'DELETE_CANDIDATE', payload: candidate.id });
+              }}>
+                Delete Candidate
+              </Btn>
             </div>
           </div>
         </div>
 
-        {/* ===== Body ===== */}
-        <div className="p-7">
-          {/* Contact grid */}
-          <div className="grid grid-cols-2 lg:grid-cols-4 gap-3 mb-7">
-            {[
-              { icon: '📞', label: 'Phone', value: candidate.phone },
-              { icon: '📧', label: 'Gmail', value: candidate.gmail },
-              { icon: '👤', label: 'Gender', value: candidate.gender || 'N/A' },
-              {
-                icon: '📄',
-                label: 'CV',
-                value: candidate.linkCV ? (
-                  <a href={candidate.linkCV} target="_blank" rel="noreferrer" className="text-brand-500 font-semibold hover:underline">
-                    View CV ↗
-                  </a>
-                ) : (
-                  'Not provided'
-                ),
-              },
-            ].map((i) => (
-              <div key={i.label} className="bg-gray-50 rounded-xl p-4 hover:bg-brand-50/50 transition-colors duration-200">
-                <div className="text-xs text-gray-400 mb-1.5 flex items-center gap-1">
-                  {i.icon} {i.label}
-                </div>
-                <div className="text-sm font-medium text-gray-900 break-all">{i.value}</div>
-              </div>
-            ))}
-          </div>
-
-          {/* ===== Interview Assessment ===== */}
+        {/* Right Column: Assessment */}
+        <div className="lg:col-span-2">
           {iv ? (
-            <div className="animate-fade-in">
-              <div className="flex justify-between items-center mb-4">
-                <h3 className="text-base font-bold text-gray-900 flex items-center gap-2">
-                  📋 Interview Assessment
-                </h3>
-                <div className="flex gap-2 items-center">
-                  {iv.result && (
-                    <Badge
-                      label={iv.result}
-                      colors={resultColors[iv.result] || { bg: '#f3f4f6', text: '#374151' }}
-                    />
-                  )}
-                  <button
-                    onClick={() => dispatch({ type: 'TOGGLE_INTERVIEW' })}
-                    className="text-xs text-brand-500 font-semibold hover:text-brand-700 transition-colors"
-                  >
-                    ✏️ Edit
-                  </button>
+            <div className="bg-surface-container-lowest p-8 rounded-xl card-shadow border border-outline-variant/10">
+              <div className="flex justify-between items-start mb-8">
+                <div>
+                  <h3 className="text-lg font-bold text-on-surface mb-1">Interview Assessment</h3>
+                  <div className="text-xs font-bold text-on-surface/50">Date: {iv.interviewDate}</div>
                 </div>
+                <Btn variant="tonal" icon="edit_note" onClick={() => dispatch({ type: 'TOGGLE_INTERVIEW' })}>
+                  Edit Notes
+                </Btn>
               </div>
 
-              <p className="text-xs text-gray-400 mb-4">Date: {iv.interviewDate}</p>
-
-              {/* Salary highlight */}
-              {sal && (
-                <div className="bg-gradient-to-r from-emerald-50 to-green-50 border border-emerald-200 rounded-2xl p-6 mb-5 text-center">
-                  <div className="text-xs text-gray-400 mb-1">💰 Salary Expectation</div>
-                  <div className="text-3xl font-extrabold text-emerald-600 tracking-tight">{sal}</div>
+              {iv.salaryExpectation && (
+                <div className="bg-secondary-container/20 p-5 rounded-xl border border-secondary-container mb-8 flex items-center gap-4">
+                  <div className="w-12 h-12 bg-secondary-container text-secondary rounded-xl flex items-center justify-center">
+                    <Icon name="payments" />
+                  </div>
+                  <div>
+                    <div className="text-[0.625rem] font-bold text-on-surface/40 uppercase tracking-widest">Expected Salary</div>
+                    <div className="text-2xl font-black text-secondary mt-0.5">
+                      ${Number(iv.salaryExpectation).toLocaleString('en-US')}
+                      <span className="text-sm font-bold opacity-60">
+                        {iv.salaryType === 'monthly' ? ' / mo' : ' / yr'}
+                      </span>
+                    </div>
+                  </div>
                 </div>
               )}
 
-              {/* Assessment cards */}
-              <div className="grid grid-cols-1 sm:grid-cols-2 gap-3 mb-4">
+              <div className="grid grid-cols-1 md:grid-cols-2 gap-6 mb-8">
                 {[
-                  { l: '💪 Strengths', v: iv.strength },
-                  { l: '⚠️ Weaknesses', v: iv.weakness },
-                  { l: '🎓 Background', v: iv.background },
-                  { l: '🛠 Skills', v: iv.skill },
-                ].map(
-                  (i) =>
-                    i.v && (
-                      <div key={i.l} className="bg-gray-50 rounded-xl p-4 hover:bg-brand-50/30 transition-colors duration-200">
-                        <div className="text-xs text-gray-400 font-semibold mb-1.5">{i.l}</div>
-                        <div className="text-sm text-gray-700 whitespace-pre-wrap leading-relaxed">{i.v}</div>
-                      </div>
-                    )
-                )}
+                  { icon: 'thumb_up', title: 'Strengths', content: iv.strength, color: 'text-secondary' },
+                  { icon: 'warning', title: 'Weaknesses', content: iv.weakness, color: 'text-error' },
+                  { icon: 'school', title: 'Background', content: iv.background, color: 'text-tertiary' },
+                  { icon: 'build', title: 'Core Skills', content: iv.skill, color: 'text-primary' },
+                ].map((sec) => sec.content && (
+                  <div key={sec.title} className="bg-surface p-5 rounded-xl border border-outline-variant/5">
+                    <div className={`flex items-center gap-2 text-xs font-bold uppercase tracking-widest ${sec.color} mb-3`}>
+                      <Icon name={sec.icon} size="text-[16px]" /> {sec.title}
+                    </div>
+                    <p className="text-sm text-on-surface whitespace-pre-wrap leading-relaxed">{sec.content}</p>
+                  </div>
+                ))}
               </div>
 
-              {iv.yearsExp && (
-                <div className="bg-gray-50 rounded-xl p-4 mb-4">
-                  <span className="text-xs text-gray-400">⏳ Experience: </span>
-                  <span className="font-bold text-gray-800">{iv.yearsExp} years</span>
-                </div>
-              )}
-
-              {iv.note && (
-                <div className="bg-amber-50 rounded-xl p-4 border-l-[3px] border-amber-400">
-                  <div className="text-xs text-amber-700 font-semibold mb-1.5">📝 Notes</div>
-                  <div className="text-sm text-gray-700 whitespace-pre-wrap leading-relaxed">{iv.note}</div>
+              {(iv.yearsExp || iv.note) && (
+                <div className="bg-surface-container-low p-6 rounded-xl border-l-[3px] border-primary">
+                  {iv.yearsExp && (
+                    <div className="mb-4">
+                      <span className="text-xs font-bold uppercase tracking-widest text-on-surface/40">Experience:</span>
+                      <span className="text-sm font-bold ml-2">{iv.yearsExp} Years</span>
+                    </div>
+                  )}
+                  {iv.note && (
+                    <div>
+                      <div className="flex items-center gap-2 text-[0.625rem] font-bold uppercase tracking-widest text-on-surface/40 mb-2">
+                        <Icon name="notes" size="text-[14px]" /> Additional Notes
+                      </div>
+                      <p className="text-sm text-on-surface font-medium leading-relaxed italic">{iv.note}</p>
+                    </div>
+                  )}
                 </div>
               )}
             </div>
           ) : (
-            /* No interview placeholder */
-            <div className="text-center py-12 px-6 bg-gray-50 rounded-2xl border-2 border-dashed border-gray-200">
-              <div className="text-5xl mb-3 opacity-50">📋</div>
-              <p className="text-gray-400 mb-4 text-sm">No interview assessment yet</p>
-              <Btn onClick={() => dispatch({ type: 'TOGGLE_INTERVIEW' })}>Start Assessment</Btn>
+            <div className="bg-surface-container-lowest p-16 rounded-xl card-shadow border border-outline-variant/10 text-center">
+              <div className="w-20 h-20 bg-surface-container-low text-on-surface/30 mx-auto rounded-full flex items-center justify-center mb-6">
+                <Icon name="assignment" className="text-4xl" />
+              </div>
+              <h3 className="text-xl font-bold text-on-surface mb-2">No Assessment Available</h3>
+              <p className="text-sm text-on-surface/50 mb-8 max-w-md mx-auto">
+                This candidate hasn't been interviewed or assessed yet. Create the assessment record to document their performance.
+              </p>
+              <Btn icon="add_notes" onClick={() => dispatch({ type: 'TOGGLE_INTERVIEW' })}>
+                Create Assessment
+              </Btn>
             </div>
           )}
-
-          {/* Footer actions */}
-          <div className="flex gap-3 mt-7 pt-5 border-t border-gray-100 flex-wrap">
-            {!iv && (
-              <Btn onClick={() => dispatch({ type: 'TOGGLE_INTERVIEW' })}>📋 Add Assessment</Btn>
-            )}
-            <Btn
-              variant="danger"
-              onClick={() => {
-                if (confirm('Delete this candidate?'))
-                  dispatch({ type: 'DELETE_CANDIDATE', payload: candidate.id });
-              }}
-            >
-              🗑 Delete
-            </Btn>
-          </div>
         </div>
       </div>
 
-      {/* Inline forms */}
-      {state.showEditCandidate && (
-        <div className="mt-5">
-          <EditCandidateForm candidate={candidate} dispatch={dispatch} />
-        </div>
-      )}
-      {state.showInterview && (
-        <div className="mt-5">
-          <InterviewForm candidate={candidate} dispatch={dispatch} />
-        </div>
-      )}
+      {state.showEditCandidate && <EditCandidateForm candidate={candidate} dispatch={dispatch} />}
+      {state.showInterview && <InterviewForm candidate={candidate} dispatch={dispatch} />}
     </div>
   );
 };

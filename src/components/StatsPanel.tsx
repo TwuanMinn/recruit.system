@@ -1,121 +1,151 @@
 import React from 'react';
 import type { Candidate, Level } from '../types';
-import { levelColors, resultColors } from '../constants';
+import { Icon } from './ui';
 
 interface Props {
   candidates: Candidate[];
 }
 
 const levels: Level[] = ['Senior', 'Beginner', 'Newbie'];
-const resultKeys = ['Potential Talented', 'Hired', 'Rejected', 'Future Consideration'];
+const resultKeys = ['Hired', 'Potential Talented', 'Rejected', 'Future Consideration'];
+
+const levelBarColors: Record<Level, string> = {
+  Senior: 'bg-primary',
+  Beginner: 'bg-on-surface-variant',
+  Newbie: 'bg-tertiary',
+};
+const levelTextColors: Record<Level, string> = {
+  Senior: 'text-primary',
+  Beginner: 'text-on-surface-variant',
+  Newbie: 'text-tertiary',
+};
+
+const resultConfig: Record<string, { color: string }> = {
+  Hired: { color: 'text-secondary' },
+  'Potential Talented': { color: 'text-primary' },
+  Rejected: { color: 'text-error' },
+  'Future Consideration': { color: 'text-tertiary' },
+};
+
+const resultLabels: Record<string, string> = {
+  Hired: 'Hired',
+  'Potential Talented': 'Potential',
+  Rejected: 'Rejected',
+  'Future Consideration': 'Future',
+};
 
 const StatsPanel: React.FC<Props> = ({ candidates }) => {
   const totalAssessed = candidates.filter((c) => c.interview?.result).length;
+  const total = candidates.length;
 
   const lCounts = levels.map((l) => ({
     label: l,
     count: candidates.filter((c) => c.level === l).length,
-    colors: levelColors[l],
+    pct: total > 0 ? Math.round((candidates.filter((c) => c.level === l).length / total) * 100) : 0,
   }));
 
-  const rCounts = resultKeys
-    .map((r) => ({
-      label: r,
-      count: candidates.filter((c) => c.interview?.result === r).length,
-      colors: resultColors[r] || { bg: '#f3f4f6', text: '#374151' },
-    }))
-    .sort((a, b) => b.count - a.count);
+  const rCounts = resultKeys.map((r) => ({
+    label: r,
+    shortLabel: resultLabels[r],
+    count: candidates.filter((c) => c.interview?.result === r).length,
+    color: resultConfig[r]?.color || 'text-on-surface',
+  }));
 
   const summaryCards = [
-    { label: 'Total', value: candidates.length, color: '#6366f1', gradient: 'from-brand-500/10 to-brand-600/5', icon: '👥' },
-    { label: 'Confirmed', value: candidates.filter((c) => c.interviewStatus === 'Confirmed').length, color: '#10b981', gradient: 'from-emerald-500/10 to-emerald-600/5', icon: '✅' },
-    { label: 'Assessed', value: totalAssessed, color: '#f59e0b', gradient: 'from-amber-500/10 to-amber-600/5', icon: '📋' },
-    { label: 'Hired', value: candidates.filter((c) => c.interview?.result === 'Hired').length, color: '#3b82f6', gradient: 'from-blue-500/10 to-blue-600/5', icon: '🎉' },
+    { label: 'Total Candidates', value: total, icon: 'groups', containerBg: 'bg-primary-container/30', iconColor: 'text-primary' },
+    { label: 'Confirmed', value: candidates.filter((c) => c.interviewStatus === 'Confirmed').length, icon: 'check_circle', containerBg: 'bg-secondary-container/30', iconColor: 'text-secondary' },
+    { label: 'Assessed', value: totalAssessed, icon: 'assignment_turned_in', containerBg: 'bg-tertiary-container/30', iconColor: 'text-tertiary' },
+    { label: 'Hired', value: candidates.filter((c) => c.interview?.result === 'Hired').length, icon: 'emoji_events', containerBg: 'bg-surface-variant/50', iconColor: 'text-primary-dim' },
   ];
 
   return (
-    <div className="animate-fade-up space-y-5 mb-6">
-      {/* Summary stats */}
-      <div className="grid grid-cols-2 md:grid-cols-4 gap-4 stagger-children">
+    <>
+      {/* Summary Cards */}
+      <div className="grid grid-cols-1 md:grid-cols-4 gap-6 mb-8">
         {summaryCards.map((s) => (
-          <div
-            key={s.label}
-            className={`animate-fade-up bg-white rounded-2xl p-5 text-center shadow-soft hover:shadow-card hover:-translate-y-1 transition-all duration-300 border border-gray-100 bg-gradient-to-br ${s.gradient} relative overflow-hidden group`}
-          >
-            {/* Top accent bar */}
-            <div className="absolute top-0 left-0 right-0 h-1 rounded-t-2xl" style={{ background: s.color }} />
-            <div className="text-2xl mb-1 group-hover:scale-110 transition-transform duration-300">{s.icon}</div>
-            <div className="text-3xl font-extrabold tracking-tight" style={{ color: s.color }}>
-              {s.value}
+          <div key={s.label} className="bg-surface-container-lowest p-6 rounded-xl card-shadow border border-outline-variant/10">
+            <div className={`w-12 h-12 ${s.containerBg} ${s.iconColor} rounded-xl flex items-center justify-center mb-4`}>
+              <Icon name={s.icon} />
             </div>
-            <div className="text-[11px] font-bold text-gray-400 uppercase tracking-widest mt-1.5">
+            <span className="text-[0.6875rem] font-bold tracking-[0.05em] uppercase text-on-surface/50">
               {s.label}
+            </span>
+            <div className="text-4xl font-black text-on-surface mt-2 tracking-tight">
+              {s.value.toLocaleString()}
             </div>
           </div>
         ))}
       </div>
 
-      {/* Level breakdown */}
-      <div className="bg-white rounded-2xl p-5 shadow-soft border border-gray-100">
-        <div className="flex items-center gap-2 text-sm font-bold text-gray-800 mb-4">
-          <span>📊</span> By Level
-        </div>
-        <div className="flex gap-3">
-          {lCounts.map((l) => (
-            <div
-              key={l.label}
-              className="flex-1 text-center rounded-xl py-5 px-3 transition-all duration-300 hover:scale-[1.03] cursor-default"
-              style={{
-                background: l.colors.bg,
-                border: `1.5px solid ${l.colors.border}`,
-              }}
-            >
-              <div className="text-3xl font-extrabold tracking-tight" style={{ color: l.colors.text }}>
-                {l.count}
-              </div>
-              <div className="text-sm font-semibold mt-1" style={{ color: l.colors.text }}>
-                {l.label}
-              </div>
-            </div>
-          ))}
-        </div>
-      </div>
+      {/* Right-rail breakdown rendered separately in App layout */}
+      {/* Store data here for the rail component */}
+    </>
+  );
+};
 
-      {/* Results breakdown */}
-      <div className="bg-white rounded-2xl p-5 shadow-soft border border-gray-100">
-        <div className="flex items-center gap-2 text-sm font-bold text-gray-800 mb-4">
-          <span>🏆</span> By Result
-          {totalAssessed > 0 && (
-            <span className="font-normal text-gray-400 text-xs ml-1">
-              ({totalAssessed} assessed)
-            </span>
-          )}
-        </div>
-        <div className="grid grid-cols-2 sm:grid-cols-4 gap-3">
-          {rCounts.map((r) => (
-            <div
-              key={r.label}
-              className="text-center rounded-xl py-4 px-3 transition-all duration-300 hover:scale-[1.03] cursor-default"
-              style={{
-                background: r.colors.bg,
-                opacity: r.count === 0 ? 0.4 : 1,
-              }}
-            >
-              <div className="text-2xl font-extrabold" style={{ color: r.colors.text }}>
-                {r.count}
-              </div>
-              <div className="text-xs font-semibold mt-1" style={{ color: r.colors.text }}>
-                {r.label}
-              </div>
-              {totalAssessed > 0 && r.count > 0 && (
-                <div className="text-[10px] mt-1 opacity-60" style={{ color: r.colors.text }}>
-                  {Math.round((r.count / totalAssessed) * 100)}%
-                </div>
-              )}
+// ===== Talent Distribution (Right Rail) =====
+export const TalentDistribution: React.FC<Props> = ({ candidates }) => {
+  const total = candidates.length;
+  const lCounts = levels.map((l) => ({
+    label: l,
+    pct: total > 0 ? Math.round((candidates.filter((c) => c.level === l).length / total) * 100) : 0,
+  }));
+
+  return (
+    <div className="bg-surface-container-lowest p-8 rounded-xl card-shadow">
+      <h3 className="text-lg font-bold text-on-surface mb-6">Talent Distribution</h3>
+      <div className="space-y-6">
+        {lCounts.map((l) => (
+          <div key={l.label}>
+            <div className="flex justify-between text-sm font-bold mb-2">
+              <span className="text-on-surface">{l.label}</span>
+              <span className={levelTextColors[l.label as Level]}>{l.pct}%</span>
             </div>
-          ))}
-        </div>
+            <div className="h-2 w-full bg-surface-container rounded-full overflow-hidden">
+              <div
+                className={`h-full ${levelBarColors[l.label as Level]} transition-all duration-700`}
+                style={{ width: `${l.pct}%` }}
+              />
+            </div>
+          </div>
+        ))}
       </div>
+    </div>
+  );
+};
+
+// ===== Application Health (Right Rail) =====
+export const ApplicationHealth: React.FC<Props> = ({ candidates }) => {
+  const totalAssessed = candidates.filter((c) => c.interview?.result).length;
+  const rCounts = resultKeys.map((r) => ({
+    label: resultLabels[r],
+    count: candidates.filter((c) => c.interview?.result === r).length,
+    color: resultConfig[r]?.color || 'text-on-surface',
+  }));
+
+  return (
+    <div className="bg-surface-container-low p-8 rounded-xl">
+      <h3 className="text-lg font-bold text-on-surface mb-6">Application Health</h3>
+      <div className="grid grid-cols-2 gap-4">
+        {rCounts.map((r) => (
+          <div key={r.label} className="bg-surface-container-lowest p-4 rounded-xl text-center">
+            <div className={`text-2xl font-black ${r.color}`}>{r.count}</div>
+            <div className="text-[0.625rem] font-bold text-on-surface/40 uppercase tracking-wider mt-1">
+              {r.label}
+            </div>
+          </div>
+        ))}
+      </div>
+      {totalAssessed > 0 && (
+        <div className="mt-8 pt-6 border-t border-outline-variant/10">
+          <div className="flex items-center justify-between text-xs font-bold text-on-surface/60">
+            <span>Total Assessed</span>
+            <span className="text-secondary flex items-center gap-0.5">
+              <Icon name="trending_up" className="text-sm" /> {totalAssessed}
+            </span>
+          </div>
+        </div>
+      )}
     </div>
   );
 };
