@@ -52,11 +52,11 @@ interface InputProps extends React.InputHTMLAttributes<HTMLInputElement> {
 
 export const Input: React.FC<InputProps> = ({ label, ...props }) => (
   <div className="mb-4">
-    <label className="block text-[0.6875rem] font-bold tracking-[0.05em] uppercase text-on-surface/50 mb-1.5">
+    <label className="block text-[0.6875rem] font-bold tracking-[0.05em] uppercase text-on-surface/80 mb-1.5">
       {label}
     </label>
     <input
-      className="w-full px-4 py-2.5 bg-surface-container-lowest border-none rounded-xl text-sm text-on-surface placeholder:text-on-surface/30 focus:ring-2 focus:ring-primary/20 outline-none transition-all"
+      className="w-full px-4 py-2.5 bg-surface border border-outline-variant/20 rounded-xl text-sm text-on-surface font-medium placeholder:text-on-surface/50 focus:border-primary/50 focus:ring-2 focus:ring-primary/20 outline-none transition-all"
       {...props}
     />
   </div>
@@ -69,11 +69,11 @@ interface TextAreaProps extends React.TextareaHTMLAttributes<HTMLTextAreaElement
 
 export const TextArea: React.FC<TextAreaProps> = ({ label, ...props }) => (
   <div className="mb-4">
-    <label className="block text-[0.6875rem] font-bold tracking-[0.05em] uppercase text-on-surface/50 mb-1.5">
+    <label className="block text-[0.6875rem] font-bold tracking-[0.05em] uppercase text-on-surface/80 mb-1.5">
       {label}
     </label>
     <textarea
-      className="w-full px-4 py-2.5 bg-surface-container-lowest border-none rounded-xl text-sm text-on-surface placeholder:text-on-surface/30 focus:ring-2 focus:ring-primary/20 outline-none transition-all resize-y min-h-[80px]"
+      className="w-full px-4 py-2.5 bg-surface border border-outline-variant/20 rounded-xl text-sm text-on-surface font-medium placeholder:text-on-surface/50 focus:border-primary/50 focus:ring-2 focus:ring-primary/20 outline-none transition-all resize-y min-h-[80px]"
       rows={3}
       {...props}
     />
@@ -93,11 +93,11 @@ interface SelProps extends React.SelectHTMLAttributes<HTMLSelectElement> {
 
 export const Sel: React.FC<SelProps> = ({ label, options, ...props }) => (
   <div className="mb-4">
-    <label className="block text-[0.6875rem] font-bold tracking-[0.05em] uppercase text-on-surface/50 mb-1.5">
+    <label className="block text-[0.6875rem] font-bold tracking-[0.05em] uppercase text-on-surface/80 mb-1.5">
       {label}
     </label>
     <select
-      className="w-full px-4 py-2.5 bg-surface-container-lowest border-none rounded-xl text-sm text-on-surface focus:ring-2 focus:ring-primary/20 outline-none transition-all cursor-pointer"
+      className="w-full px-4 py-2.5 bg-surface border border-outline-variant/20 rounded-xl text-sm text-on-surface font-medium focus:border-primary/50 focus:ring-2 focus:ring-primary/20 outline-none transition-all cursor-pointer"
       {...props}
     >
       {options.map((o) => (
