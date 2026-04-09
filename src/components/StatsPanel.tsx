@@ -39,7 +39,7 @@ const StatsPanel: React.FC<Props> = ({ candidates }) => {
 
   const summaryCards = [
     { label: 'Total Candidates', value: total, icon: 'groups', containerBg: 'bg-primary-container/30', iconColor: 'text-primary' },
-    { label: 'Confirmed', value: candidates.filter((c) => c.interviewStatus === 'Confirmed').length, icon: 'check_circle', containerBg: 'bg-secondary-container/30', iconColor: 'text-secondary' },
+    { label: 'Interview', value: candidates.filter((c) => c.interviewStatus === 'Confirmed').length, icon: 'check_circle', containerBg: 'bg-secondary-container/30', iconColor: 'text-secondary' },
     { label: 'Rejected', value: candidates.filter((c) => c.interviewStatus === 'Rejected').length, icon: 'cancel', containerBg: 'bg-error-container/30', iconColor: 'text-error' },
     { label: 'No Response', value: candidates.filter((c) => c.interviewStatus === 'No Response').length, icon: 'schedule', containerBg: 'bg-surface-variant/50', iconColor: 'text-outline' },
   ];
