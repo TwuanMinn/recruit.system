@@ -30,7 +30,7 @@ const resultConfig: Record<string, { color: string }> = {
 const resultLabels: Record<string, string> = {
   Hired: 'Hired',
   'Potential Talented': 'Potential',
-  Rejected: 'Rejected',
+  Rejected: 'Denied',
   'Future Consideration': 'Future',
 };
 

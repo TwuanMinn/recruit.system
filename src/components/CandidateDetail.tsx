@@ -55,7 +55,14 @@ const CandidateDetail: React.FC<Props> = ({ candidate, dispatch, state }) => {
               <div>
                 <div className="text-[0.625rem] font-bold text-on-surface/40 uppercase tracking-widest mb-1">Status</div>
                 {iv?.result ? (
-                  <Badge label={`Result: ${iv.result}`} colors={{ text: '#006d4a', border: '#006d4a', bg: 'transparent' }} />
+                  <Badge 
+                    label={`Result: ${iv.result === 'Rejected' ? 'Denied' : iv.result}`} 
+                    colors={{ 
+                      text: iv.result === 'Rejected' ? '#ac3149' : '#006d4a', 
+                      border: iv.result === 'Rejected' ? '#ac3149' : '#006d4a', 
+                      bg: 'transparent' 
+                    }} 
+                  />
                 ) : (
                   <StatusDot label={candidate.interviewStatus === 'Rejected' ? 'Denied' : (candidate.interviewStatus || 'No Response')} color={isConfirmed ? '#006d4a' : '#ac3149'} />
                 )}
