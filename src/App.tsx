@@ -177,7 +177,7 @@ export default function App() {
                         <h3 className="text-lg sm:text-xl font-bold text-on-surface whitespace-nowrap">Recent Candidates</h3>
                         <button
                           onClick={exportToPDF}
-                          className="self-start px-3 py-1.5 bg-surface text-on-surface/70 text-xs font-bold rounded-lg border border-outline-variant/30 hover:bg-surface-container hover:text-primary transition-colors flex items-center gap-1.5 shadow-sm"
+                          className="self-start px-3 py-1.5 bg-red-600 text-white text-xs font-bold rounded-lg border border-transparent hover:bg-red-700 transition-colors flex items-center gap-1.5 shadow-sm shadow-red-600/20"
                           title="Export Table to PDF"
                         >
                           <Icon name="download" size="text-sm" /> Export PDF
