@@ -6,6 +6,8 @@ import { StatusDot, Icon } from './components/ui';
 import StatsPanel, { TalentDistribution, ApplicationHealth } from './components/StatsPanel';
 import CandidateForm from './components/CandidateForm';
 import CandidateDetail from './components/CandidateDetail';
+import { jsPDF } from 'jspdf';
+import autoTable from 'jspdf-autotable';
 import type { Candidate, Level } from './types';
 
 // Random avatars for demo
@@ -52,6 +54,37 @@ export default function App() {
        c.interview?.result === filterResult);
     return matchSearch && matchLevel && matchResult;
   });
+
+  const exportToPDF = () => {
+    const doc = new jsPDF();
+    doc.text('Recent Candidates', 14, 15);
+    
+    const tableColumn = ["Name", "Email", "Phone", "Level", "Status", "Final Result"];
+    const tableRows: any[] = [];
+
+    filtered.forEach(cand => {
+      const candData = [
+        cand.name,
+        cand.gmail,
+        cand.phone,
+        cand.level,
+        cand.interviewStatus || 'No Response',
+        cand.interview?.result || 'N/A'
+      ];
+      tableRows.push(candData);
+    });
+
+    autoTable(doc, {
+      head: [tableColumn],
+      body: tableRows,
+      startY: 20,
+      theme: 'grid',
+      styles: { fontSize: 9, cellPadding: 3 },
+      headStyles: { fillColor: [0, 109, 74] } // Primary green
+    });
+
+    doc.save(`candidates_export_${new Date().toISOString().split('T')[0]}.pdf`);
+  };
 
   return (
     <div className="flex bg-surface font-body text-on-surface selection:bg-primary-container selection:text-on-primary-container">
@@ -140,7 +173,16 @@ export default function App() {
                 <div className="lg:col-span-2">
                   <div className="bg-surface-container-lowest rounded-xl card-shadow overflow-hidden border border-outline-variant/10">
                     <div className="px-4 sm:px-6 lg:px-8 py-5 sm:py-6 border-b border-outline-variant/10 flex flex-col sm:flex-row justify-between items-start sm:items-center gap-4 bg-white/50">
-                      <h3 className="text-lg sm:text-xl font-bold text-on-surface whitespace-nowrap">Recent Candidates</h3>
+                      <div className="flex flex-col gap-2">
+                        <h3 className="text-lg sm:text-xl font-bold text-on-surface whitespace-nowrap">Recent Candidates</h3>
+                        <button
+                          onClick={exportToPDF}
+                          className="self-start px-3 py-1.5 bg-surface text-on-surface/70 text-xs font-bold rounded-lg border border-outline-variant/30 hover:bg-surface-container hover:text-primary transition-colors flex items-center gap-1.5 shadow-sm"
+                          title="Export Table to PDF"
+                        >
+                          <Icon name="download" size="text-sm" /> Export PDF
+                        </button>
+                      </div>
                       <div className="relative w-full sm:max-w-sm">
                         <Icon name="search" className="absolute left-4 top-1/2 -translate-y-1/2 text-on-surface/40" />
                         <input
