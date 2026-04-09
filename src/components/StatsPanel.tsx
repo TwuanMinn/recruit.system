@@ -38,19 +38,6 @@ const StatsPanel: React.FC<Props> = ({ candidates }) => {
   const totalAssessed = candidates.filter((c) => c.interview?.result).length;
   const total = candidates.length;
 
-  const lCounts = levels.map((l) => ({
-    label: l,
-    count: candidates.filter((c) => c.level === l).length,
-    pct: total > 0 ? Math.round((candidates.filter((c) => c.level === l).length / total) * 100) : 0,
-  }));
-
-  const rCounts = resultKeys.map((r) => ({
-    label: r,
-    shortLabel: resultLabels[r],
-    count: candidates.filter((c) => c.interview?.result === r).length,
-    color: resultConfig[r]?.color || 'text-on-surface',
-  }));
-
   const summaryCards = [
     { label: 'Total Candidates', value: total, icon: 'groups', containerBg: 'bg-primary-container/30', iconColor: 'text-primary' },
     { label: 'Confirmed', value: candidates.filter((c) => c.interviewStatus === 'Confirmed').length, icon: 'check_circle', containerBg: 'bg-secondary-container/30', iconColor: 'text-secondary' },

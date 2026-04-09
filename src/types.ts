@@ -44,8 +44,8 @@ export interface AppState {
   showInterview: boolean;
   showEditCandidate: boolean;
   searchTerm: string;
-  filterLevel: 'all' | Level;
-  filterResult: 'all' | ResultValue | '';
+  filterLevel: string;
+  filterResult: string;
 }
 
 export type AppAction =
@@ -58,8 +58,8 @@ export type AppAction =
   | { type: 'TOGGLE_INTERVIEW' }
   | { type: 'TOGGLE_EDIT_CANDIDATE' }
   | { type: 'SET_SEARCH'; payload: string }
-  | { type: 'SET_FILTER_LEVEL'; payload: 'all' | Level }
-  | { type: 'SET_FILTER_RESULT'; payload: 'all' | ResultValue | '' }
+  | { type: 'SET_FILTER_LEVEL'; payload: string }
+  | { type: 'SET_FILTER_RESULT'; payload: string }
   | { type: 'LOAD_CANDIDATES'; payload: Candidate[] };
 
 // ===== Design Tokens =====

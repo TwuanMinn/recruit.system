@@ -1,0 +1,1 @@
+{"root":["./src/app.tsx","./src/constants.ts","./src/main.tsx","./src/pdf.ts","./src/reducer.ts","./src/types.ts","./src/vite-env.d.ts","./src/components/candidatedetail.tsx","./src/components/candidateform.tsx","./src/components/editcandidateform.tsx","./src/components/interviewform.tsx","./src/components/statspanel.tsx","./src/components/ui.tsx"],"version":"5.9.3"}

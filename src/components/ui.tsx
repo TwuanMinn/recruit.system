@@ -1,6 +1,5 @@
 import React from 'react';
 import type { ColorSet, InterviewStatus } from '../types';
-import { confirmColors } from '../constants';
 
 // ===== Material Icon =====
 interface IconProps {
@@ -166,7 +165,7 @@ export const ConfirmPicker: React.FC<ConfirmPickerProps> = ({ value, onChange })
                 ? `${cfg.bg} border-2 ring-2 ring-offset-1`
                 : 'bg-surface-container-lowest border-2 border-outline-variant/10 text-on-surface/40 hover:text-on-surface/70'
             }`}
-            style={selected ? { color: cfg.color, borderColor: cfg.color, ringColor: `${cfg.color}33` } : undefined}
+            style={selected ? { color: cfg.color, borderColor: cfg.color } : undefined}
           >
             <Icon name={cfg.icon} className="text-lg" />
             {opt}

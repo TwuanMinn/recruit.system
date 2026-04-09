@@ -1,10 +1,10 @@
 import { useReducer, useEffect, useState } from 'react';
+import { motion, AnimatePresence } from 'framer-motion';
 import { reducer, initialState } from './reducer';
-import { STORAGE_KEY, resultOptions } from './constants';
-import { Badge, StatusDot, Icon } from './components/ui';
+import { STORAGE_KEY } from './constants';
+import { StatusDot, Icon } from './components/ui';
 import StatsPanel, { TalentDistribution, ApplicationHealth } from './components/StatsPanel';
 import CandidateForm from './components/CandidateForm';
-import EditCandidateForm from './components/EditCandidateForm';
 import CandidateDetail from './components/CandidateDetail';
 import type { Candidate, Level } from './types';
 
@@ -62,8 +62,15 @@ export default function App() {
 
 
         <div className="px-8 pb-12">
+        <AnimatePresence mode="wait">
           {view === 'list' && !showForm && (
-            <>
+            <motion.div
+              key="list-view"
+              initial={{ opacity: 0, y: 20 }}
+              animate={{ opacity: 1, y: 0 }}
+              exit={{ opacity: 0, scale: 0.98 }}
+              transition={{ duration: 0.4, ease: "easeOut" }}
+            >
               {/* Header Title Section */}
               <div className="py-8 flex justify-between items-end">
                 <div>
@@ -161,17 +168,22 @@ export default function App() {
                             </tr>
                           </thead>
                           <tbody className="divide-y divide-outline-variant/5">
-                            {filtered.map((c, i) => {
-                              const badge = levelBadgeConfig[c.level] || levelBadgeConfig.Beginner;
-                              const isConfirmed = c.interviewStatus === 'Confirmed';
-                              const avatar = avatars[(i + 1) % avatars.length];
-                              
-                              return (
-                                <tr
-                                  key={c.id}
-                                  className="hover:bg-surface-container-low/50 transition-colors cursor-pointer group"
-                                  onClick={() => dispatch({ type: 'SELECT', payload: c })}
-                                >
+                            <AnimatePresence>
+                              {filtered.map((c, i) => {
+                                const badge = levelBadgeConfig[c.level] || levelBadgeConfig.Beginner;
+                                const isConfirmed = c.interviewStatus === 'Confirmed';
+                                const avatar = avatars[(i + 1) % avatars.length];
+                                
+                                return (
+                                  <motion.tr
+                                    initial={{ opacity: 0, y: 15 }}
+                                    animate={{ opacity: 1, y: 0 }}
+                                    exit={{ opacity: 0, x: -20 }}
+                                    transition={{ duration: 0.2, delay: i * 0.05 }}
+                                    key={c.id}
+                                    className="hover:bg-surface-container-low/50 transition-colors cursor-pointer group"
+                                    onClick={() => dispatch({ type: 'SELECT', payload: c })}
+                                  >
                                   <td className="px-8 py-5">
                                     <div className="flex items-center gap-3">
                                       <div className="w-10 h-10 rounded-full bg-surface-container overflow-hidden group-hover:ring-2 ring-primary/20 transition-all">
@@ -236,9 +248,10 @@ export default function App() {
                                       )}
                                     </div>
                                   </td>
-                                </tr>
-                              );
-                            })}
+                                  </motion.tr>
+                                );
+                              })}
+                            </AnimatePresence>
                           </tbody>
                         </table>
                       )}
@@ -254,23 +267,37 @@ export default function App() {
                   {/* Removed Activity Float Component */}
                 </div>
               </div>
-            </>
+            </motion.div>
           )}
 
           {/* ===== Candidate Detail View ===== */}
           {view === 'detail' && selectedCandidate && (
-            <div className="py-8 animate-fade-in max-w-4xl mx-auto">
+            <motion.div 
+              key="detail-view"
+              initial={{ opacity: 0, y: 20 }}
+              animate={{ opacity: 1, y: 0 }}
+              exit={{ opacity: 0, y: 20 }}
+              transition={{ duration: 0.4, ease: "easeOut" }}
+              className="py-8 max-w-4xl mx-auto"
+            >
               <CandidateDetail candidate={candidates.find((c) => c.id === selectedCandidate.id) || selectedCandidate} dispatch={dispatch} state={state} />
-            </div>
+            </motion.div>
           )}
 
           {/* ===== Add/Edit Modals ===== */}
           {showForm && (
-            <div className="py-8 animate-fade-in max-w-3xl mx-auto">
+            <motion.div 
+              key="add-form"
+              initial={{ opacity: 0, scale: 0.95 }}
+              animate={{ opacity: 1, scale: 1 }}
+              exit={{ opacity: 0, scale: 0.95 }}
+              transition={{ duration: 0.3, ease: "backOut" }}
+              className="py-8 max-w-3xl mx-auto"
+            >
               <CandidateForm dispatch={dispatch} />
-            </div>
+            </motion.div>
           )}
-          
+        </AnimatePresence>
         </div>
       </main>
     </div>
